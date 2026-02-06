@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Time Tracker</title>
+    <title>Productivity Tracker</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
@@ -23,20 +23,122 @@
             font-size: 2.25rem;
             font-weight: 600;
             margin-bottom: 8px;
-            background: linear-gradient(135deg, #58a6ff 0%, #a371f7 100%);
+            background: linear-gradient(135deg, #a855f7 0%, #ec4899 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
         }
         .subtitle { color: #7d8590; font-size: 1rem; }
-        .input-section {
+
+        /* Stats Dashboard */
+        .stats-dashboard {
             background: #161b22;
-            padding: 24px;
-            border-radius: 12px;
+            padding: 20px;
+            border-radius: 16px;
             border: 1px solid #30363d;
             margin-bottom: 20px;
         }
-        .input-row { display: flex; gap: 12px; }
+        .stats-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            user-select: none;
+        }
+        .stats-header h2 {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #e6edf3;
+        }
+        .stats-toggle {
+            background: none;
+            border: none;
+            color: #7d8590;
+            cursor: pointer;
+            font-size: 14px;
+            padding: 4px 8px;
+            border-radius: 6px;
+            transition: background 0.2s;
+        }
+        .stats-toggle:hover { background: #21262d; }
+        .stats-content {
+            margin-top: 16px;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+        }
+        .stats-content.collapsed { display: none; }
+        .stat-card {
+            background: #0d1117;
+            padding: 16px;
+            border-radius: 12px;
+            border: 1px solid #30363d;
+        }
+        .stat-label {
+            font-size: 12px;
+            color: #7d8590;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+        }
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #f59e0b;
+        }
+        .stat-value.teal { color: #14b8a6; }
+        .stat-secondary {
+            font-size: 12px;
+            color: #7d8590;
+            margin-top: 4px;
+        }
+        .weekly-chart {
+            grid-column: 1 / -1;
+            background: #0d1117;
+            padding: 16px;
+            border-radius: 12px;
+            border: 1px solid #30363d;
+        }
+        .chart-bars {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            height: 80px;
+            gap: 8px;
+            margin-top: 12px;
+        }
+        .chart-bar-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+        }
+        .chart-bar {
+            width: 100%;
+            background: linear-gradient(180deg, #a855f7 0%, #ec4899 100%);
+            border-radius: 4px 4px 0 0;
+            min-height: 4px;
+            transition: height 0.3s ease;
+        }
+        .chart-label {
+            font-size: 10px;
+            color: #7d8590;
+        }
+        .chart-value {
+            font-size: 10px;
+            color: #e6edf3;
+        }
+
+        .input-section {
+            background: #161b22;
+            padding: 24px;
+            border-radius: 16px;
+            border: 1px solid #30363d;
+            margin-bottom: 20px;
+        }
+        .input-row { display: flex; gap: 12px; margin-bottom: 12px; }
+        .input-row-secondary { display: flex; gap: 12px; align-items: center; }
         #entry-input {
             flex: 1;
             padding: 14px 18px;
@@ -44,15 +146,31 @@
             font-family: 'Inter', sans-serif;
             background: #0d1117;
             border: 1px solid #30363d;
-            border-radius: 8px;
+            border-radius: 10px;
             color: #e6edf3;
             outline: none;
             transition: border-color 0.2s, box-shadow 0.2s;
         }
         #entry-input::placeholder { color: #484f58; }
         #entry-input:focus {
-            border-color: #58a6ff;
-            box-shadow: 0 0 0 3px rgba(88, 166, 255, 0.15);
+            border-color: #a855f7;
+            box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.15);
+        }
+        #category-select {
+            padding: 10px 14px;
+            font-size: 14px;
+            font-family: 'Inter', sans-serif;
+            background: #0d1117;
+            border: 1px solid #30363d;
+            border-radius: 10px;
+            color: #e6edf3;
+            outline: none;
+            cursor: pointer;
+            min-width: 130px;
+        }
+        #category-select:focus {
+            border-color: #a855f7;
+            box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.15);
         }
         button {
             padding: 14px 28px;
@@ -60,16 +178,16 @@
             font-family: 'Inter', sans-serif;
             font-weight: 500;
             border: none;
-            border-radius: 8px;
+            border-radius: 10px;
             cursor: pointer;
             transition: all 0.2s;
         }
         #add-btn {
-            background: linear-gradient(135deg, #238636 0%, #2ea043 100%);
+            background: linear-gradient(135deg, #a855f7 0%, #ec4899 100%);
             color: white;
         }
         #add-btn:hover {
-            background: linear-gradient(135deg, #2ea043 0%, #3fb950 100%);
+            background: linear-gradient(135deg, #9333ea 0%, #db2777 100%);
             transform: translateY(-1px);
         }
         .secondary {
@@ -90,14 +208,65 @@
             padding: 12px 16px;
             background: rgba(248, 81, 73, 0.1);
             border: 1px solid rgba(248, 81, 73, 0.4);
-            border-radius: 8px;
+            border-radius: 10px;
             color: #f85149;
             font-size: 14px;
         }
-        .controls { display: flex; gap: 12px; margin-bottom: 24px; }
+
+        /* Search/Filter */
+        .search-section {
+            margin-bottom: 20px;
+        }
+        #search-input {
+            width: 100%;
+            padding: 12px 18px;
+            font-size: 14px;
+            font-family: 'Inter', sans-serif;
+            background: #161b22;
+            border: 1px solid #30363d;
+            border-radius: 10px;
+            color: #e6edf3;
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        #search-input::placeholder { color: #484f58; }
+        #search-input:focus {
+            border-color: #a855f7;
+            box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.15);
+        }
+
+        /* Active tag filters */
+        .active-filters {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 12px;
+        }
+        .active-filter {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 10px;
+            background: rgba(168, 85, 247, 0.2);
+            border: 1px solid rgba(168, 85, 247, 0.4);
+            border-radius: 20px;
+            font-size: 12px;
+            color: #a855f7;
+        }
+        .active-filter button {
+            background: none;
+            border: none;
+            color: #a855f7;
+            cursor: pointer;
+            padding: 0;
+            font-size: 14px;
+            line-height: 1;
+        }
+
+        .controls { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
         .entries {
             background: #161b22;
-            border-radius: 12px;
+            border-radius: 16px;
             border: 1px solid #30363d;
             overflow: hidden;
         }
@@ -119,12 +288,15 @@
             font-weight: 600;
             font-size: 15px;
             color: #e6edf3;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
         .task-total {
             font-size: 14px;
             font-weight: 500;
-            color: #3fb950;
-            background: rgba(63, 185, 80, 0.1);
+            color: #f59e0b;
+            background: rgba(245, 158, 11, 0.1);
             padding: 4px 12px;
             border-radius: 20px;
         }
@@ -136,7 +308,10 @@
             padding: 10px 0;
             border-bottom: 1px solid #21262d;
             font-size: 14px;
+            cursor: pointer;
+            transition: background 0.15s;
         }
+        .entry:hover { background: rgba(168, 85, 247, 0.05); margin: 0 -20px; padding: 10px 20px; }
         .entry:last-child { border-bottom: none; }
         .entry-date {
             color: #7d8590;
@@ -145,7 +320,7 @@
             min-width: 90px;
         }
         .entry-duration {
-            color: #58a6ff;
+            color: #14b8a6;
             font-weight: 500;
             min-width: 65px;
         }
@@ -165,7 +340,7 @@
             cursor: pointer;
             padding: 6px 10px;
             font-size: 16px;
-            border-radius: 6px;
+            border-radius: 8px;
             transition: all 0.15s;
             line-height: 1;
         }
@@ -173,33 +348,165 @@
             background: rgba(248, 81, 73, 0.15);
             color: #f85149;
         }
+
+        /* Category badges */
+        .category-badge {
+            font-size: 11px;
+            font-weight: 500;
+            padding: 2px 8px;
+            border-radius: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+        .category-work { background: rgba(59, 130, 246, 0.2); color: #3b82f6; }
+        .category-meeting { background: rgba(168, 85, 247, 0.2); color: #a855f7; }
+        .category-personal { background: rgba(34, 197, 94, 0.2); color: #22c55e; }
+        .category-learning { background: rgba(245, 158, 11, 0.2); color: #f59e0b; }
+        .category-admin { background: rgba(156, 163, 175, 0.2); color: #9ca3af; }
+
+        /* Tags */
+        .tag-chip {
+            display: inline-block;
+            font-size: 11px;
+            font-weight: 500;
+            padding: 2px 8px;
+            background: rgba(236, 72, 153, 0.2);
+            color: #ec4899;
+            border-radius: 12px;
+            margin-left: 4px;
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+        .tag-chip:hover {
+            background: rgba(236, 72, 153, 0.3);
+        }
+
+        /* Inline editing */
+        .entry-edit-mode {
+            background: rgba(168, 85, 247, 0.1);
+            margin: 0 -20px;
+            padding: 12px 20px;
+            border-radius: 0;
+        }
+        .entry-edit-mode .entry-edit-input {
+            flex: 1;
+            padding: 8px 12px;
+            font-size: 14px;
+            font-family: 'Inter', sans-serif;
+            background: #0d1117;
+            border: 1px solid #a855f7;
+            border-radius: 8px;
+            color: #e6edf3;
+            outline: none;
+        }
+        .entry-edit-mode .edit-category-select {
+            padding: 8px 12px;
+            font-size: 13px;
+            font-family: 'Inter', sans-serif;
+            background: #0d1117;
+            border: 1px solid #30363d;
+            border-radius: 8px;
+            color: #e6edf3;
+            outline: none;
+        }
+        .edit-actions {
+            display: flex;
+            gap: 8px;
+        }
+        .edit-actions button {
+            padding: 6px 12px;
+            font-size: 12px;
+            border-radius: 6px;
+        }
+        .edit-save {
+            background: linear-gradient(135deg, #a855f7 0%, #ec4899 100%);
+            color: white;
+            border: none;
+        }
+        .edit-cancel {
+            background: #21262d;
+            color: #c9d1d9;
+            border: 1px solid #30363d;
+        }
+
+        /* Import file input (hidden) */
+        #import-file { display: none; }
+
         @media (max-width: 600px) {
             body { padding: 16px; }
             .input-row { flex-direction: column; }
+            .input-row-secondary { flex-direction: column; align-items: stretch; }
             .controls { flex-direction: column; }
             .entry { flex-wrap: wrap; gap: 8px; }
             .entry-text { width: 100%; order: 10; }
+            .stats-content { grid-template-columns: 1fr; }
         }
     </style>
 </head>
 <body>
     <div class="container">
         <header>
-            <h1>Time Tracker</h1>
+            <h1>Productivity Tracker</h1>
             <p class="subtitle">Log your time using natural language</p>
         </header>
 
+        <!-- Stats Dashboard -->
+        <section class="stats-dashboard">
+            <div class="stats-header" onclick="toggleStats()">
+                <h2>Statistics</h2>
+                <button class="stats-toggle" id="stats-toggle-btn">Hide</button>
+            </div>
+            <div class="stats-content" id="stats-content">
+                <div class="stat-card">
+                    <div class="stat-label">Today</div>
+                    <div class="stat-value teal" id="stat-today">0h</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">This Week</div>
+                    <div class="stat-value" id="stat-week">0h</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Top Task</div>
+                    <div class="stat-value teal" id="stat-top-task">-</div>
+                    <div class="stat-secondary" id="stat-top-task-time"></div>
+                </div>
+                <div class="weekly-chart">
+                    <div class="stat-label">Daily Totals This Week</div>
+                    <div class="chart-bars" id="chart-bars"></div>
+                </div>
+            </div>
+        </section>
+
         <section class="input-section">
             <div class="input-row">
-                <input type="text" id="entry-input" placeholder="e.g., Code review for 2h 30m" autocomplete="off">
+                <input type="text" id="entry-input" placeholder="e.g., Code review for 2h 30m #urgent" autocomplete="off">
                 <button id="add-btn">Add Entry</button>
             </div>
-            <p class="hint">Try: "Meeting 9:00-11:00" or "Documentation for 45 minutes" or "ABC task 1h 30m"</p>
+            <div class="input-row-secondary">
+                <select id="category-select">
+                    <option value="">No Category</option>
+                    <option value="work">Work</option>
+                    <option value="meeting">Meeting</option>
+                    <option value="personal">Personal</option>
+                    <option value="learning">Learning</option>
+                    <option value="admin">Admin</option>
+                </select>
+            </div>
+            <p class="hint">Try: "Meeting 9am-11am" or "last Monday Documentation for 45m #docs [Work]" or "yesterday ABC task 1h 30m"</p>
             <p id="error-message" class="error" hidden></p>
+        </section>
+
+        <!-- Search/Filter -->
+        <section class="search-section">
+            <input type="text" id="search-input" placeholder="Search by task name, tag, or category...">
+            <div class="active-filters" id="active-filters"></div>
         </section>
 
         <section class="controls">
             <button id="export-btn" class="secondary">Export Excel</button>
+            <button id="export-json-btn" class="secondary">Export JSON</button>
+            <button id="import-btn" class="secondary">Import JSON</button>
+            <input type="file" id="import-file" accept=".json">
             <button id="clear-btn" class="danger">Clear All</button>
         </section>
 
@@ -208,6 +515,10 @@
 
     <script>
         const STORAGE_KEY = 'timetracker_entries';
+        let activeTagFilter = null;
+        let searchQuery = '';
+        let editingEntryId = null;
+        let statsCollapsed = false;
 
         // Storage functions
         function loadEntries() {
@@ -226,6 +537,15 @@
             entry.id = Date.now().toString(36) + Math.random().toString(36).substr(2);
             entries.push(entry);
             saveEntries(entries);
+        }
+
+        function updateEntry(id, updates) {
+            const entries = loadEntries();
+            const index = entries.findIndex(e => e.id === id);
+            if (index !== -1) {
+                entries[index] = { ...entries[index], ...updates };
+                saveEntries(entries);
+            }
         }
 
         function clearAllEntries() {
@@ -254,11 +574,47 @@
                    String(d.getDate()).padStart(2, '0');
         }
 
+        function getRelativeDayISO(dayName, isLastWeek) {
+            const days = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+            const targetDay = days.indexOf(dayName.toLowerCase());
+            if (targetDay === -1) return null;
+
+            const today = new Date();
+            const currentDay = today.getDay();
+            let diff = targetDay - currentDay;
+
+            if (isLastWeek) {
+                // "last Monday" means the Monday of last week
+                diff = diff - 7;
+                if (diff >= 0) diff -= 7;
+            } else {
+                // "this Monday" means the Monday of this week
+                if (diff > 0) diff -= 7; // If it's in the future, go back
+            }
+
+            const result = new Date(today);
+            result.setDate(today.getDate() + diff);
+            return result.getFullYear() + '-' +
+                   String(result.getMonth() + 1).padStart(2, '0') + '-' +
+                   String(result.getDate()).padStart(2, '0');
+        }
+
+        function getWeekStartISO() {
+            const d = new Date();
+            const day = d.getDay();
+            const diff = d.getDate() - day + (day === 0 ? -6 : 1); // Monday start
+            d.setDate(diff);
+            return d.getFullYear() + '-' +
+                   String(d.getMonth() + 1).padStart(2, '0') + '-' +
+                   String(d.getDate()).padStart(2, '0');
+        }
+
         // Parsing functions
         function extractDate(text) {
             let remaining = text;
             let date = null;
 
+            // ISO format: 2024-01-15
             const isoMatch = text.match(/\b(\d{4}-\d{2}-\d{2})\b/);
             if (isoMatch) {
                 date = isoMatch[1];
@@ -266,6 +622,7 @@
                 return { date, remaining };
             }
 
+            // Relative: today, yesterday
             const relMatch = text.match(/\b(today|yesterday)\b/i);
             if (relMatch) {
                 date = relMatch[1].toLowerCase() === 'yesterday' ? getYesterdayISO() : getTodayISO();
@@ -273,10 +630,35 @@
                 return { date, remaining };
             }
 
+            // Relative days: "last Monday", "last Friday", "this Monday"
+            const lastDayMatch = text.match(/\b(last|this)\s+(monday|tuesday|wednesday|thursday|friday|saturday|sunday)\b/i);
+            if (lastDayMatch) {
+                const isLastWeek = lastDayMatch[1].toLowerCase() === 'last';
+                date = getRelativeDayISO(lastDayMatch[2], isLastWeek);
+                remaining = text.replace(lastDayMatch[0], ' ');
+                return { date, remaining };
+            }
+
             return { date: null, remaining };
         }
 
+        // 12-hour time conversion helper
+        function convert12to24(hour, minute, period) {
+            let h = parseInt(hour);
+            const m = minute ? parseInt(minute) : 0;
+            period = period.toLowerCase();
+
+            if (period === 'am') {
+                if (h === 12) h = 0;
+            } else { // pm
+                if (h !== 12) h += 12;
+            }
+
+            return { hour: String(h).padStart(2, '0'), minute: String(m).padStart(2, '0') };
+        }
+
         function extractTimeRange(text) {
+            // 24-hour format: from 9:00 to 11:00
             let match = text.match(/from\s+(\d{1,2}):(\d{2})\s+to\s+(\d{1,2}):(\d{2})/i);
             if (match) {
                 const startTime = match[1].padStart(2, '0') + ':' + match[2];
@@ -285,10 +667,22 @@
                 return { found: true, startTime, endTime, remaining };
             }
 
+            // 24-hour format: 9:00-11:00
             match = text.match(/(\d{1,2}):(\d{2})\s*-\s*(\d{1,2}):(\d{2})/);
             if (match) {
                 const startTime = match[1].padStart(2, '0') + ':' + match[2];
                 const endTime = match[3].padStart(2, '0') + ':' + match[4];
+                const remaining = text.replace(match[0], ' ');
+                return { found: true, startTime, endTime, remaining };
+            }
+
+            // 12-hour format: 9am-11am, 2:30pm-4pm, 9am-4:30pm
+            match = text.match(/(\d{1,2})(?::(\d{2}))?\s*(am|pm)\s*-\s*(\d{1,2})(?::(\d{2}))?\s*(am|pm)/i);
+            if (match) {
+                const start = convert12to24(match[1], match[2], match[3]);
+                const end = convert12to24(match[4], match[5], match[6]);
+                const startTime = start.hour + ':' + start.minute;
+                const endTime = end.hour + ':' + end.minute;
                 const remaining = text.replace(match[0], ' ');
                 return { found: true, startTime, endTime, remaining };
             }
@@ -332,6 +726,42 @@
             return { found: false };
         }
 
+        // Extract tags from text (#hashtag syntax)
+        function extractTags(text) {
+            const tagRegex = /#(\w+)/g;
+            const tags = [];
+            let match;
+            let remaining = text;
+
+            while ((match = tagRegex.exec(text)) !== null) {
+                tags.push(match[1].toLowerCase());
+            }
+
+            remaining = text.replace(/#\w+/g, ' ');
+            return { tags, remaining };
+        }
+
+        // Extract category from text ([Work] or @work syntax)
+        function extractCategory(text) {
+            // [Category] syntax
+            let match = text.match(/\[(work|meeting|personal|learning|admin)\]/i);
+            if (match) {
+                const category = match[1].toLowerCase();
+                const remaining = text.replace(match[0], ' ');
+                return { category, remaining };
+            }
+
+            // @category syntax
+            match = text.match(/@(work|meeting|personal|learning|admin)\b/i);
+            if (match) {
+                const category = match[1].toLowerCase();
+                const remaining = text.replace(match[0], ' ');
+                return { category, remaining };
+            }
+
+            return { category: null, remaining: text };
+        }
+
         function cleanTaskName(text) {
             return text
                 .replace(/\s+/g, ' ')
@@ -342,7 +772,7 @@
                 .trim();
         }
 
-        function parseEntry(text) {
+        function parseEntry(text, selectedCategory) {
             let workingText = text.trim();
             let result = {
                 date: getTodayISO(),
@@ -351,15 +781,31 @@
                 endTime: null,
                 taskName: null,
                 rawText: text,
+                category: selectedCategory || null,
+                tags: [],
                 createdAt: new Date().toISOString()
             };
 
+            // Extract date first
             const dateResult = extractDate(workingText);
             if (dateResult.date) {
                 result.date = dateResult.date;
                 workingText = dateResult.remaining;
             }
 
+            // Extract category from text (overrides dropdown if present)
+            const categoryResult = extractCategory(workingText);
+            if (categoryResult.category) {
+                result.category = categoryResult.category;
+                workingText = categoryResult.remaining;
+            }
+
+            // Extract tags
+            const tagsResult = extractTags(workingText);
+            result.tags = tagsResult.tags;
+            workingText = tagsResult.remaining;
+
+            // Extract time range or duration
             const timeRangeResult = extractTimeRange(workingText);
             if (timeRangeResult.found) {
                 result.startTime = timeRangeResult.startTime;
@@ -380,7 +826,7 @@
                 return { success: false, error: 'Could not find task name. Example: "Meeting for 1h"' };
             }
             if (!result.durationMinutes) {
-                return { success: false, error: 'Could not find duration. Try "2h", "30m", "1h 30m", or "9:00-10:30"' };
+                return { success: false, error: 'Could not find duration. Try "2h", "30m", "1h 30m", "9:00-10:30", or "9am-11am"' };
             }
 
             return { success: true, entry: result };
@@ -388,20 +834,16 @@
 
         // Smart task matching - normalizes task names for grouping
         function normalizeTaskName(name) {
-            // Lowercase and split into words
             const words = name.toLowerCase()
-                .replace(/[^a-z0-9\s]/g, ' ')  // Remove punctuation
+                .replace(/[^a-z0-9\s]/g, ' ')
                 .split(/\s+/)
                 .filter(w => w.length > 0)
-                .sort();  // Sort alphabetically so "setup claude" == "claude setup"
+                .sort();
             return words.join(' ');
         }
 
-        // Find the best existing task name that matches, or return the new one
         function findMatchingTaskName(newName, existingEntries) {
             const normalizedNew = normalizeTaskName(newName);
-
-            // Build a map of normalized names to their first occurrence (display name)
             const taskMap = {};
             existingEntries.forEach(entry => {
                 const normalized = normalizeTaskName(entry.taskName);
@@ -409,12 +851,9 @@
                     taskMap[normalized] = entry.taskName;
                 }
             });
-
-            // If we find a match, return the existing display name
             if (taskMap[normalizedNew]) {
                 return taskMap[normalizedNew];
             }
-
             return newName;
         }
 
@@ -432,7 +871,32 @@
             return div.innerHTML;
         }
 
-        // Grouping and rendering - uses smart matching
+        // Filter entries based on search and tag filter
+        function filterEntries(entries) {
+            return entries.filter(entry => {
+                // Tag filter
+                if (activeTagFilter && (!entry.tags || !entry.tags.includes(activeTagFilter))) {
+                    return false;
+                }
+
+                // Search filter
+                if (searchQuery) {
+                    const query = searchQuery.toLowerCase();
+                    const matchesTask = entry.taskName.toLowerCase().includes(query);
+                    const matchesCategory = entry.category && entry.category.toLowerCase().includes(query);
+                    const matchesTags = entry.tags && entry.tags.some(t => t.includes(query));
+                    const matchesRaw = entry.rawText.toLowerCase().includes(query);
+
+                    if (!matchesTask && !matchesCategory && !matchesTags && !matchesRaw) {
+                        return false;
+                    }
+                }
+
+                return true;
+            });
+        }
+
+        // Grouping and rendering
         function groupEntriesByTask(entries) {
             const groups = {};
             entries.forEach(entry => {
@@ -457,12 +921,39 @@
             return groups;
         }
 
+        function renderCategoryBadge(category) {
+            if (!category) return '';
+            const labels = {
+                work: 'Work',
+                meeting: 'Meeting',
+                personal: 'Personal',
+                learning: 'Learning',
+                admin: 'Admin'
+            };
+            return '<span class="category-badge category-' + category + '">' + labels[category] + '</span>';
+        }
+
+        function renderTags(tags) {
+            if (!tags || tags.length === 0) return '';
+            return tags.map(tag =>
+                '<span class="tag-chip" data-tag="' + escapeHtml(tag) + '">#' + escapeHtml(tag) + '</span>'
+            ).join('');
+        }
+
         function render() {
-            const entries = loadEntries();
+            const allEntries = loadEntries();
+            const entries = filterEntries(allEntries);
             const container = document.getElementById('entries-container');
 
-            if (entries.length === 0) {
+            if (allEntries.length === 0) {
                 container.innerHTML = '<p class="empty-state">No entries yet. Add your first time entry above.</p>';
+                updateStats(allEntries);
+                return;
+            }
+
+            if (entries.length === 0) {
+                container.innerHTML = '<p class="empty-state">No entries match your search or filter.</p>';
+                updateStats(allEntries);
                 return;
             }
 
@@ -478,20 +969,160 @@
                 html += '</div>';
                 html += '<div class="task-entries">';
                 group.entries.forEach(entry => {
-                    html += '<div class="entry">';
-                    html += '<span class="entry-date">' + entry.date + '</span>';
-                    html += '<span class="entry-duration">' + formatDuration(entry.durationMinutes) + '</span>';
-                    if (entry.startTime && entry.endTime) {
-                        html += '<span class="entry-times">' + entry.startTime + '-' + entry.endTime + '</span>';
+                    const isEditing = editingEntryId === entry.id;
+                    if (isEditing) {
+                        html += '<div class="entry entry-edit-mode" data-id="' + entry.id + '">';
+                        html += '<input type="text" class="entry-edit-input" value="' + escapeHtml(entry.rawText) + '">';
+                        html += '<select class="edit-category-select">';
+                        html += '<option value=""' + (!entry.category ? ' selected' : '') + '>No Category</option>';
+                        html += '<option value="work"' + (entry.category === 'work' ? ' selected' : '') + '>Work</option>';
+                        html += '<option value="meeting"' + (entry.category === 'meeting' ? ' selected' : '') + '>Meeting</option>';
+                        html += '<option value="personal"' + (entry.category === 'personal' ? ' selected' : '') + '>Personal</option>';
+                        html += '<option value="learning"' + (entry.category === 'learning' ? ' selected' : '') + '>Learning</option>';
+                        html += '<option value="admin"' + (entry.category === 'admin' ? ' selected' : '') + '>Admin</option>';
+                        html += '</select>';
+                        html += '<div class="edit-actions">';
+                        html += '<button class="edit-save" data-id="' + entry.id + '">Save</button>';
+                        html += '<button class="edit-cancel">Cancel</button>';
+                        html += '</div>';
+                        html += '</div>';
+                    } else {
+                        html += '<div class="entry" data-id="' + entry.id + '">';
+                        html += '<span class="entry-date">' + entry.date + '</span>';
+                        html += '<span class="entry-duration">' + formatDuration(entry.durationMinutes) + '</span>';
+                        if (entry.startTime && entry.endTime) {
+                            html += '<span class="entry-times">' + entry.startTime + '-' + entry.endTime + '</span>';
+                        }
+                        html += '<span class="entry-text">';
+                        html += escapeHtml(entry.rawText);
+                        html += renderCategoryBadge(entry.category);
+                        html += renderTags(entry.tags);
+                        html += '</span>';
+                        html += '<button class="entry-delete" data-id="' + entry.id + '">x</button>';
+                        html += '</div>';
                     }
-                    html += '<span class="entry-text">' + escapeHtml(entry.rawText) + '</span>';
-                    html += '<button class="entry-delete" data-id="' + entry.id + '">x</button>';
-                    html += '</div>';
                 });
                 html += '</div></div>';
             });
 
             container.innerHTML = html;
+            updateStats(allEntries);
+            renderActiveFilters();
+        }
+
+        function renderActiveFilters() {
+            const container = document.getElementById('active-filters');
+            let html = '';
+
+            if (activeTagFilter) {
+                html += '<span class="active-filter">';
+                html += '#' + escapeHtml(activeTagFilter);
+                html += '<button onclick="clearTagFilter()">x</button>';
+                html += '</span>';
+            }
+
+            container.innerHTML = html;
+        }
+
+        function clearTagFilter() {
+            activeTagFilter = null;
+            render();
+        }
+
+        // Stats functions
+        function toggleStats() {
+            statsCollapsed = !statsCollapsed;
+            const content = document.getElementById('stats-content');
+            const btn = document.getElementById('stats-toggle-btn');
+
+            if (statsCollapsed) {
+                content.classList.add('collapsed');
+                btn.textContent = 'Show';
+            } else {
+                content.classList.remove('collapsed');
+                btn.textContent = 'Hide';
+            }
+        }
+
+        function updateStats(entries) {
+            const today = getTodayISO();
+            const weekStart = getWeekStartISO();
+
+            // Today's total
+            const todayMinutes = entries
+                .filter(e => e.date === today)
+                .reduce((sum, e) => sum + e.durationMinutes, 0);
+            document.getElementById('stat-today').textContent = formatDuration(todayMinutes);
+
+            // This week's total
+            const weekMinutes = entries
+                .filter(e => e.date >= weekStart)
+                .reduce((sum, e) => sum + e.durationMinutes, 0);
+            document.getElementById('stat-week').textContent = formatDuration(weekMinutes);
+
+            // Top task
+            if (entries.length > 0) {
+                const taskTotals = {};
+                entries.forEach(e => {
+                    const key = normalizeTaskName(e.taskName);
+                    if (!taskTotals[key]) {
+                        taskTotals[key] = { name: e.taskName, minutes: 0 };
+                    }
+                    taskTotals[key].minutes += e.durationMinutes;
+                });
+
+                const topTask = Object.values(taskTotals).sort((a, b) => b.minutes - a.minutes)[0];
+                const topTaskEl = document.getElementById('stat-top-task');
+                const topTaskTimeEl = document.getElementById('stat-top-task-time');
+
+                if (topTask) {
+                    const displayName = topTask.name.length > 15 ? topTask.name.substring(0, 15) + '...' : topTask.name;
+                    topTaskEl.textContent = displayName;
+                    topTaskTimeEl.textContent = formatDuration(topTask.minutes);
+                } else {
+                    topTaskEl.textContent = '-';
+                    topTaskTimeEl.textContent = '';
+                }
+            }
+
+            // Weekly chart
+            renderWeeklyChart(entries, weekStart);
+        }
+
+        function renderWeeklyChart(entries, weekStart) {
+            const chartContainer = document.getElementById('chart-bars');
+            const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+            const dailyTotals = [];
+
+            // Calculate daily totals for the week
+            const startDate = new Date(weekStart);
+            for (let i = 0; i < 7; i++) {
+                const date = new Date(startDate);
+                date.setDate(startDate.getDate() + i);
+                const dateISO = date.getFullYear() + '-' +
+                    String(date.getMonth() + 1).padStart(2, '0') + '-' +
+                    String(date.getDate()).padStart(2, '0');
+
+                const dayMinutes = entries
+                    .filter(e => e.date === dateISO)
+                    .reduce((sum, e) => sum + e.durationMinutes, 0);
+
+                dailyTotals.push({ day: days[i], minutes: dayMinutes });
+            }
+
+            const maxMinutes = Math.max(...dailyTotals.map(d => d.minutes), 60);
+
+            let html = '';
+            dailyTotals.forEach(d => {
+                const heightPercent = (d.minutes / maxMinutes) * 100;
+                html += '<div class="chart-bar-container">';
+                html += '<span class="chart-value">' + (d.minutes > 0 ? formatDuration(d.minutes) : '') + '</span>';
+                html += '<div class="chart-bar" style="height: ' + heightPercent + '%"></div>';
+                html += '<span class="chart-label">' + d.day + '</span>';
+                html += '</div>';
+            });
+
+            chartContainer.innerHTML = html;
         }
 
         // Excel export (SpreadsheetML)
@@ -530,6 +1161,8 @@
             xml += '<Cell><Data ss:Type="String">Duration (formatted)</Data></Cell>\n';
             xml += '<Cell><Data ss:Type="String">Start Time</Data></Cell>\n';
             xml += '<Cell><Data ss:Type="String">End Time</Data></Cell>\n';
+            xml += '<Cell><Data ss:Type="String">Category</Data></Cell>\n';
+            xml += '<Cell><Data ss:Type="String">Tags</Data></Cell>\n';
             xml += '<Cell><Data ss:Type="String">Raw Text</Data></Cell>\n';
             xml += '<Cell><Data ss:Type="String">Created At</Data></Cell>\n';
             xml += '</Row>\n';
@@ -542,6 +1175,8 @@
                 xml += '<Cell><Data ss:Type="String">' + formatDuration(entry.durationMinutes) + '</Data></Cell>\n';
                 xml += '<Cell><Data ss:Type="String">' + escapeXml(entry.startTime || '') + '</Data></Cell>\n';
                 xml += '<Cell><Data ss:Type="String">' + escapeXml(entry.endTime || '') + '</Data></Cell>\n';
+                xml += '<Cell><Data ss:Type="String">' + escapeXml(entry.category || '') + '</Data></Cell>\n';
+                xml += '<Cell><Data ss:Type="String">' + escapeXml((entry.tags || []).join(', ')) + '</Data></Cell>\n';
                 xml += '<Cell><Data ss:Type="String">' + escapeXml(entry.rawText) + '</Data></Cell>\n';
                 xml += '<Cell><Data ss:Type="String">' + escapeXml(entry.createdAt) + '</Data></Cell>\n';
                 xml += '</Row>\n';
@@ -560,13 +1195,92 @@
             URL.revokeObjectURL(url);
         }
 
+        // JSON export/import
+        function exportToJSON() {
+            const entries = loadEntries();
+            if (entries.length === 0) {
+                alert('No entries to export.');
+                return;
+            }
+
+            const data = {
+                exportDate: new Date().toISOString(),
+                version: '2.0',
+                entries: entries
+            };
+
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'productivity-tracker-backup.json';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        function importFromJSON(file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const data = JSON.parse(e.target.result);
+                    let entries = [];
+
+                    // Support both direct array and wrapped format
+                    if (Array.isArray(data)) {
+                        entries = data;
+                    } else if (data.entries && Array.isArray(data.entries)) {
+                        entries = data.entries;
+                    } else {
+                        throw new Error('Invalid format');
+                    }
+
+                    // Validate entries have required fields
+                    const validEntries = entries.filter(e =>
+                        e.taskName && e.date && e.durationMinutes
+                    );
+
+                    if (validEntries.length === 0) {
+                        alert('No valid entries found in the file.');
+                        return;
+                    }
+
+                    // Merge with existing entries (avoid duplicates by id)
+                    const existingEntries = loadEntries();
+                    const existingIds = new Set(existingEntries.map(e => e.id));
+
+                    let imported = 0;
+                    validEntries.forEach(entry => {
+                        if (!entry.id || !existingIds.has(entry.id)) {
+                            entry.id = entry.id || (Date.now().toString(36) + Math.random().toString(36).substr(2));
+                            existingEntries.push(entry);
+                            imported++;
+                        }
+                    });
+
+                    saveEntries(existingEntries);
+                    render();
+                    alert('Successfully imported ' + imported + ' entries.');
+                } catch (err) {
+                    alert('Failed to import: Invalid JSON file.');
+                }
+            };
+            reader.readAsText(file);
+        }
+
         // Event handlers
         document.addEventListener('DOMContentLoaded', function() {
             const input = document.getElementById('entry-input');
             const addBtn = document.getElementById('add-btn');
+            const categorySelect = document.getElementById('category-select');
             const exportBtn = document.getElementById('export-btn');
+            const exportJsonBtn = document.getElementById('export-json-btn');
+            const importBtn = document.getElementById('import-btn');
+            const importFile = document.getElementById('import-file');
             const clearBtn = document.getElementById('clear-btn');
             const errorEl = document.getElementById('error-message');
+            const searchInput = document.getElementById('search-input');
 
             function showError(message) {
                 errorEl.textContent = message;
@@ -584,18 +1298,19 @@
                     showError('Please enter a time entry.');
                     return;
                 }
-                const result = parseEntry(text);
+                const selectedCategory = categorySelect.value || null;
+                const result = parseEntry(text, selectedCategory);
                 if (!result.success) {
                     showError(result.error);
                     return;
                 }
 
-                // Smart matching: use existing task name if similar one exists
                 const entries = loadEntries();
                 result.entry.taskName = findMatchingTaskName(result.entry.taskName, entries);
 
                 addEntry(result.entry);
                 input.value = '';
+                categorySelect.value = '';
                 render();
             }
 
@@ -603,18 +1318,120 @@
             input.addEventListener('keypress', function(e) {
                 if (e.key === 'Enter') handleAdd();
             });
+
+            // Search functionality
+            searchInput.addEventListener('input', function() {
+                searchQuery = this.value.trim();
+                render();
+            });
+
             exportBtn.addEventListener('click', exportToExcel);
+            exportJsonBtn.addEventListener('click', exportToJSON);
+
+            importBtn.addEventListener('click', function() {
+                importFile.click();
+            });
+
+            importFile.addEventListener('change', function() {
+                if (this.files.length > 0) {
+                    importFromJSON(this.files[0]);
+                    this.value = '';
+                }
+            });
+
             clearBtn.addEventListener('click', function() {
-                if (confirm('Are you sure you want to delete all entries? This cannot be undone.')) {
-                    clearAllEntries();
-                    render();
+                if (confirm('Are you sure you want to delete all entries?')) {
+                    if (confirm('This action cannot be undone. Delete all entries?')) {
+                        clearAllEntries();
+                        render();
+                    }
                 }
             });
 
             document.getElementById('entries-container').addEventListener('click', function(e) {
+                // Delete button
                 if (e.target.classList.contains('entry-delete')) {
+                    e.stopPropagation();
                     const id = e.target.getAttribute('data-id');
                     deleteEntry(id);
+                    render();
+                    return;
+                }
+
+                // Tag chip click - filter by tag
+                if (e.target.classList.contains('tag-chip')) {
+                    e.stopPropagation();
+                    activeTagFilter = e.target.getAttribute('data-tag');
+                    render();
+                    return;
+                }
+
+                // Edit save button
+                if (e.target.classList.contains('edit-save')) {
+                    e.stopPropagation();
+                    const id = e.target.getAttribute('data-id');
+                    const entryDiv = e.target.closest('.entry');
+                    const newText = entryDiv.querySelector('.entry-edit-input').value.trim();
+                    const newCategory = entryDiv.querySelector('.edit-category-select').value || null;
+
+                    if (newText) {
+                        const result = parseEntry(newText, newCategory);
+                        if (result.success) {
+                            updateEntry(id, {
+                                rawText: newText,
+                                taskName: result.entry.taskName,
+                                date: result.entry.date,
+                                durationMinutes: result.entry.durationMinutes,
+                                startTime: result.entry.startTime,
+                                endTime: result.entry.endTime,
+                                category: result.entry.category,
+                                tags: result.entry.tags
+                            });
+                        }
+                    }
+                    editingEntryId = null;
+                    render();
+                    return;
+                }
+
+                // Edit cancel button
+                if (e.target.classList.contains('edit-cancel')) {
+                    e.stopPropagation();
+                    editingEntryId = null;
+                    render();
+                    return;
+                }
+
+                // Entry click - start editing
+                const entry = e.target.closest('.entry');
+                if (entry && !entry.classList.contains('entry-edit-mode')) {
+                    const id = entry.getAttribute('data-id');
+                    editingEntryId = id;
+                    render();
+
+                    // Focus the input
+                    setTimeout(() => {
+                        const editInput = document.querySelector('.entry-edit-input');
+                        if (editInput) {
+                            editInput.focus();
+                            editInput.select();
+                        }
+                    }, 0);
+                }
+            });
+
+            // Handle Enter key in edit mode
+            document.getElementById('entries-container').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter' && e.target.classList.contains('entry-edit-input')) {
+                    const saveBtn = e.target.closest('.entry').querySelector('.edit-save');
+                    if (saveBtn) saveBtn.click();
+                }
+            });
+
+            // Handle Escape key to cancel edit
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && editingEntryId) {
+                    editingEntryId = null;
                     render();
                 }
             });
